@@ -54,9 +54,8 @@ public class AdafruitPCA9685 {
         writeRegByte(Constants.MODE2, (byte)(Constants.OUTDRV));
         writeRegByte(Constants.MODE1, (byte)(Constants.ALLCALL));
         sleep(0.005);
-
         byte mode1 = readRegByte(Constants.MODE1);
-        mode1 = (byte)(mode1 & ~Constants.SLEEP); // wake up (reset sleep)
+        mode1 = (byte)(mode1 & ~(Constants.SLEEP | Constants.EXTCLK)); // wake up (reset sleep)
         writeRegByte(Constants.MODE1, mode1);
         sleep(0.005); // wait for oscillator
     }
@@ -81,6 +80,7 @@ public class AdafruitPCA9685 {
         double preScale = Math.floor(preScaleEval + 0.5);
         Timber.d("Final pre-scale: %f", preScale);
         byte oldmode = readRegByte(Constants.MODE1);
+        oldmode = (byte)(oldmode & ~(Constants.SLEEP | Constants.EXTCLK)); // wake up (reset sleep)
         byte newmode = (byte)((oldmode & 0x7F) | 0x10);
         writeRegByte(Constants.MODE1, newmode);
         writeRegByte(Constants.PRESCALE, (byte)(Math.floor(preScale)));
@@ -90,10 +90,11 @@ public class AdafruitPCA9685 {
     }
 
     public void setPwm(int channel, int on, int off) {
-        writeRegByte(Constants.LED0_ON_L + 4 * channel, (byte)(on & 0xFF));
-        writeRegByte(Constants.LED0_ON_H + 4 * channel, (byte)(on >> 8));
-        writeRegByte(Constants.LED0_OFF_L + 4 * channel, (byte)(off & 0xFF));
-        writeRegByte(Constants.LED0_OFF_H + 4 * channel, (byte)(off >> 8));
+        int offset = 4 * channel;
+        writeRegByte(Constants.LED0_ON_L + offset, (byte)(on & 0xFF));
+        writeRegByte(Constants.LED0_ON_H + offset, (byte)(on >> 8));
+        writeRegByte(Constants.LED0_OFF_L + offset, (byte)(off & 0xFF));
+        writeRegByte(Constants.LED0_OFF_H + offset, (byte)(off >> 8));
     }
 
     private void setAllPwm(int on, int off) {

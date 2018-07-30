@@ -3,6 +3,11 @@ package com.androidthings.ssarangi.adafruitpca9685;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.google.android.things.pio.I2cDevice;
+import com.google.android.things.pio.PeripheralManager;
+
+import java.io.IOException;
+
 import timber.log.Timber;
 
 /**
@@ -43,8 +48,8 @@ public class MainActivity extends Activity {
         int servoIdx = 0;
         servoHat.createServo(0, Constants.DEFAULT_SERVO_FREQUENCY);
         servoHat.rotateToAngle(servoIdx, 45);
-        servoHat.run(servoIdx);
-        // servoHat.execute(0);
+        servoHat.execute(0);
+
 
         // Close the servoHat
         // servoHat.close();

@@ -22,6 +22,7 @@ public class Constants {
     // Bits
     public static final int RESTART            = 0x80;
     public static final int SLEEP              = 0x10;
+    public static final int EXTCLK             = 0x40;
     public static final int ALLCALL            = 0x01;
     public static final int INVRT              = 0x10;
     public static final int OUTDRV             = 0x04;
