@@ -48,11 +48,17 @@ public class MainActivity extends Activity {
         int servoIdx = 0;
         servoHat.createServo(0, Constants.DEFAULT_SERVO_FREQUENCY);
         servoHat.rotateToAngle(servoIdx, 45);
-        servoHat.execute(0);
-
+        for (int i = 0; i < 5; ++i) {
+            servoHat.execute(0);
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Timber.d("Interrupted the sleep");
+        }
 
         // Close the servoHat
-        // servoHat.close();
+        servoHat.close();
         setContentView(R.layout.activity_main);
     }
 }

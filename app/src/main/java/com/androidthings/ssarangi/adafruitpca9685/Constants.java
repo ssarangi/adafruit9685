@@ -20,7 +20,7 @@ public class Constants {
     public static final int ALL_LED_OFF_H      = 0xFD;
 
     // Bits
-    public static final int RESTART            = 0x80;
+    public static final int RESTART            = (byte)0x80;
     public static final int SLEEP              = 0x10;
     public static final int EXTCLK             = 0x40;
     public static final int ALLCALL            = 0x01;
@@ -29,7 +29,7 @@ public class Constants {
 
     // Constants
     public static final double FREQ_25MHz         = 25000000.0f; // 25MHz
-    public static final int DEFAULT_SERVO_FREQUENCY = 60;
+    public static final int DEFAULT_SERVO_FREQUENCY = 60;        // 60Hz
     public static final float DEFAULT_MIN_PULSE_DURATION_MS = 1;
     public static final float DEFAULT_MAX_PULSE_DURATION_MS = 2;
     public static final float DEFAULT_MIN_ANGLE_DEG = 0;

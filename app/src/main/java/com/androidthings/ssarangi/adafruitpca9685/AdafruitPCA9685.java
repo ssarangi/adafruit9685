@@ -25,7 +25,7 @@ public class AdafruitPCA9685 {
         } catch (IOException e) {
             Timber.e("Unable to access PWM 9685 controller: %s", e.getMessage());
         }
-        reset();
+        initialize();
     }
 
     private List<Integer> scanI2CAvailableDevices(String i2cName) {
@@ -47,7 +47,7 @@ public class AdafruitPCA9685 {
         if (mI2cDevice == null) throw new RuntimeException("I2C device not initialized");
     }
 
-    private void reset() {
+    private void initialize() {
         checkIfI2CInitialized();
         Timber.d("Resetting PCA9685...");
         setAllPwm(0, 0);
@@ -55,7 +55,7 @@ public class AdafruitPCA9685 {
         writeRegByte(Constants.MODE1, (byte)(Constants.ALLCALL));
         sleep(0.005);
         byte mode1 = readRegByte(Constants.MODE1);
-        mode1 = (byte)(mode1 & ~(Constants.SLEEP | Constants.EXTCLK)); // wake up (reset sleep)
+        mode1 = (byte)(mode1 & ~(Constants.SLEEP)); // wake up (reset sleep)
         writeRegByte(Constants.MODE1, mode1);
         sleep(0.005); // wait for oscillator
     }
@@ -79,14 +79,18 @@ public class AdafruitPCA9685 {
         Timber.d("Estimated pre-scale: %f", preScaleEval);
         double preScale = Math.floor(preScaleEval + 0.5);
         Timber.d("Final pre-scale: %f", preScale);
+
+        // Clear the Sleep bit and restart
         byte oldmode = readRegByte(Constants.MODE1);
-        oldmode = (byte)(oldmode & ~(Constants.SLEEP | Constants.EXTCLK)); // wake up (reset sleep)
-        byte newmode = (byte)((oldmode & 0x7F) | 0x10);
+        byte newmode = (byte)((oldmode & ~Constants.RESTART) | Constants.SLEEP); // Go to sleep
         writeRegByte(Constants.MODE1, newmode);
+        sleep(0.005);
+        // Prescale can only be set in SLEEP mode.
         writeRegByte(Constants.PRESCALE, (byte)(Math.floor(preScale)));
+        sleep(0.005);
         writeRegByte(Constants.MODE1, oldmode);
         sleep(0.005);
-        writeRegByte(Constants.MODE1, (byte)(oldmode | 0x80));
+        writeRegByte(Constants.MODE1, (byte)(oldmode | Constants.RESTART)); // Restart
     }
 
     public void setPwm(int channel, int on, int off) {
