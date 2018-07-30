@@ -28,20 +28,20 @@ public class AdafruitPCA9685 {
         initialize();
     }
 
-    private List<Integer> scanI2CAvailableDevices(String i2cName) {
-        List<Integer> validAddresses = new ArrayList<>();
-        PeripheralManager manager = PeripheralManager.getInstance();
-        for (int address = 0; address < 127; ++address) {
-            try {
-                mI2cDevice = manager.openI2cDevice(i2cName, address);
-                writeRegByte(Constants.LED0_ON_L, (byte)(Constants.OUTDRV));
-                validAddresses.add(address);
-            } catch (IOException e) {
-            }
-        }
-
-        return validAddresses;
-    }
+//    private List<Integer> scanI2CAvailableDevices(String i2cName) {
+//        List<Integer> validAddresses = new ArrayList<>();
+//        PeripheralManager manager = PeripheralManager.getInstance();
+//        for (int address = 0; address < 127; ++address) {
+//            try {
+//                mI2cDevice = manager.openI2cDevice(i2cName, address);
+//                writeRegByte(Constants.LED0_ON_L, (byte)(Constants.OUTDRV));
+//                validAddresses.add(address);
+//            } catch (IOException e) {
+//            }
+//        }
+//
+//        return validAddresses;
+//    }
 
     private void checkIfI2CInitialized() {
         if (mI2cDevice == null) throw new RuntimeException("I2C device not initialized");
@@ -49,7 +49,7 @@ public class AdafruitPCA9685 {
 
     private void initialize() {
         checkIfI2CInitialized();
-        Timber.d("Resetting PCA9685...");
+        Timber.d("Initializing PCA9685...");
         setAllPwm(0, 0);
         writeRegByte(Constants.MODE2, (byte)(Constants.OUTDRV));
         writeRegByte(Constants.MODE1, (byte)(Constants.ALLCALL));
