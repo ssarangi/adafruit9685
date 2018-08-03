@@ -45,11 +45,21 @@ public class MainActivity extends Activity {
                 Constants.PCA9685_ADDRESS,
                 Constants.SIXTEEN_CHANNEL);
 
-        int servoIdx = 0;
-        servoHat.createServo(0, Constants.DEFAULT_SERVO_FREQUENCY);
+        int servoIdx = 1;
+        servoHat.createServo(servoIdx, Constants.DEFAULT_SERVO_FREQUENCY);
+        servoHat.setPulse(servoIdx, 60);
         servoHat.rotateToAngle(servoIdx, 45);
-        for (int i = 0; i < 5; ++i) {
-            servoHat.execute(0);
+        for (int i = 0; i < 2; ++i) {
+            servoHat.execute(servoIdx, 150);
+            try {
+
+
+
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+
+            }
+            servoHat.execute(servoIdx, 600);
         }
         try {
             Thread.sleep(1000);

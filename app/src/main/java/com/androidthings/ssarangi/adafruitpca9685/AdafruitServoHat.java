@@ -30,6 +30,15 @@ public class AdafruitServoHat {
         servos.set(servo.getIndex(), servo);
     }
 
+    public void setPulse(int index, int pulse) {
+        int pulse_length = 1000000;
+        pulse_length /= 60;
+        pulse_length /= 4096;
+        pulse *= 1000;
+        pulse /= pulse_length;
+        mPwm.setPwm(index, 0, pulse);
+    }
+
     public void rotateToAngle(int index, int angle) throws IllegalArgumentException {
         if (index < 0 || index > mNumServos) {
             Timber.d("Servo index must be between 0 & %s", mNumServos);
@@ -49,13 +58,13 @@ public class AdafruitServoHat {
         mPwm.setPwm(servo.getIndex(), 0, servo.getDutyCycle());
     }
 
-    public void execute(int index) throws IllegalArgumentException {
+    public void execute(int index, int angle) throws IllegalArgumentException {
         if (index < 0 || index > mNumServos) {
             Timber.d("Servo index must be between 0 & %s", mNumServos);
             throw new IllegalArgumentException("Servo index must be between 0 & " + mNumServos);
         }
 
-        mPwm.setPwm(index, 0, 150);
+        mPwm.setPwm(index, 0, angle);
     }
 
     public void close() {

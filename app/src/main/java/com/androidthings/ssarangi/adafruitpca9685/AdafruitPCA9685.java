@@ -2,6 +2,7 @@ package com.androidthings.ssarangi.adafruitpca9685;
 
 import com.google.android.things.pio.I2cDevice;
 import com.google.android.things.pio.PeripheralManager;
+import com.google.android.things.pio.Pwm;
 
 import java.io.IOException;
 import java.util.ArrayList;
